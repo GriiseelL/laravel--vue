@@ -57,7 +57,7 @@ const login = async () => {
     <div class="w-full">
         <div class="text-center">
             <h1 class="text-3xl font-semibold text-gray-900">Sign up</h1>
-            <p class="mt-2 text-gray-500">Sign in below to access your account</p>
+            <p class="mt-2 text-gray-500">Sign up below to access your account</p>
         </div>
         <div class="mt-5">
             <form  @submit.prevent="login">
@@ -73,10 +73,7 @@ const login = async () => {
                     <button type="submit" class="w-full rounded-md bg-black px-3 py-4 text-white focus:bg-gray-600 focus:outline-none">Sign up</button>
                 </div>
                 <p class="text-center text-sm text-gray-500">   have an account yet?
-                    <a href="/"
-                        class="font-semibold text-gray-600 hover:underline focus:text-gray-800 focus:outline-none">Sign
-                        in
-                    </a>.
+                    <router-link to="/">Sign in</router-link>
                 </p>
             </form>
         </div>

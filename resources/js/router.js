@@ -3,28 +3,35 @@ import { createRouter, createWebHistory } from "vue-router";
 import Regis from "./pages/regis.vue";
 import Login from "./pages/login.vue";
 import Dashboard from "./pages/dashboard.vue";
+import Notfound from "./pages/notfound.vue";
 
 const isAuthenticated = () => {
     return localStorage.getItem("token") !== null;
 };
-
 
 const routes = [
     {
         path: "/",
         name: "regis",
         component: Regis,
+        meta: { guest: true },
     },
     {
         path: "/login",
         name: "login",
         component: Login,
+        meta: { guest: true },
     },
     {
         path: "/dashboard",
         name: "dashboard",
         component: Dashboard,
-        meta: {requiresAuth: true}
+        meta: { requiresAuth: true },
+    },
+    {
+        path: "/:pathMatch(.*)*",
+        name: "NotFound",
+        component: Notfound,
     },
 ];
 
@@ -33,11 +40,13 @@ const router = createRouter({
     routes,
 });
 
-
 router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth && !isAuthenticated()) {
         console.log("User belum login, redirect ke login");
         next("/login");
+    } else if (to.meta.guest && isAuthenticated()) {
+        console.log("User sudah login, redirect ke dashboard");
+        next("/dashboard");
     } else {
         next();
     }
