@@ -23,7 +23,7 @@ const storePost = async () => {
     });
 
     // Redirect ke halaman login setelah sukses
-    router.push({ path: "/login" });
+    router.push({ path: "/login" }); 
   } catch (error) {
     // Menyimpan error response jika terjadi kesalahan
     errors.value = error.response?.data || { message: "Terjadi kesalahan." };
@@ -156,7 +156,7 @@ const storePost = async () => {
                     <button type="submit" class="w-full rounded-md bg-black px-3 py-4 text-white focus:bg-gray-600 focus:outline-none">Sign in</button>
                 </div>
                 <p class="text-center text-sm text-gray-500">Don&#x27;t have an account yet?
-                    <a href="#!"
+                    <a href="/login"
                         class="font-semibold text-gray-600 hover:underline focus:text-gray-800 focus:outline-none">Sign
                         up
                     </a>.

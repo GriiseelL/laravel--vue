@@ -24,13 +24,22 @@ const navigation = [
     { name: "Reports", href: "#", current: false },
 ];
 const userNavigation = [
-    { name: "Your Profile", href: "#" },
+    { name: "your_Profile", href: "#" },
     { name: "Settings", href: "#" },
-    { name: "Sign out", href: "#" },
+    { name: "sign_out", href: "#" },
 ];
 
+import router from "../router";
+import { ref, onMounted } from "vue";
+const name = ref("");
+
+onMounted(() => {
+    name.value = localStorage.getItem("name") || "User";
+});
+
 const logout = async () => {
-    console.log('logout');
+    console.log("logout");
+    alert("anda telah logout");
     // errors.value = {}; // Reset error
     // loading.value = true;
 
@@ -61,12 +70,28 @@ const logout = async () => {
     // } finally {
     //     loading.value = false; // Matikan loading
     // }
-};
+    try {
+        await api.post("/api/logout"); // Coba logout ke server
+    } catch (error) {
+        console.warn("Logout gagal atau token sudah expired.");
+    }
 
+    // Tetap hapus token & redirect ke halaman login
+    localStorage.removeItem("token");
+    router.push("/login");
+
+    //   loading.value = false;
+};
+const handleClick = async (item) => {
+    if (item.name == "sign_out") {
+        console.log(item.name);
+        await logout();
+    }
+};
 </script>
 <template>
     <!--
-    This example requires updating your template:
+    This example requires updating your template: 
 
     ```
     <html class="h-full bg-gray-100">
@@ -150,6 +175,9 @@ const logout = async () => {
                                             v-slot="{ active }"
                                         >
                                             <a
+                                                @click.prevent="
+                                                    handleClick(item)
+                                                "
                                                 :href="item.href"
                                                 :class="[
                                                     active
@@ -247,7 +275,7 @@ const logout = async () => {
         <header class="bg-white shadow-sm">
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                 <h1 class="text-3xl font-bold tracking-tight text-gray-900">
-                    Dashboard
+                    selamat datang {{ name }}!!!
                 </h1>
             </div>
         </header>
