@@ -9,6 +9,7 @@ const axiosClient = axios.create({
     },
 });
 
+
 // axiosClient.interceptors.request.use(config =>{
 //     config.headers.Authorization = Bearer ${localStorage.getItem('token')}
 // })
@@ -25,5 +26,7 @@ axiosClient.interceptors.response.use(
         throw error;
     }
 );
+
+
 
 export default axiosClient;

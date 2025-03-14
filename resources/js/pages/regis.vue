@@ -24,15 +24,24 @@ const storePost = async () => {
                 password: data.value.password,
             }
         );
+        console.log("Registrasi berhasil, kirim OTP...");
 
-        // Redirect ke halaman login setelah sukses
-        router.push({ path: "/login" });
+        // //kirim otp
+        // await axiosClient.post("http://127.0.0.1:8000/api/send-email", {
+        //     email: data.value.email,
+        // });
+        // console.log("kirim OTP berhasil");
+
+        localStorage.setItem("email", data.value.email);
+        router.push({ path: "/otp" });
+        console.log("Redirect");
+
     } catch (error) {
         // Menyimpan error response jika terjadi kesalahan
         errors.value = error.response?.data || {
             message: "Terjadi kesalahan.",
         };
-        alert('email sudah terdaftar')
+        alert("email sudah terdaftar");
     }
 };
 </script>
@@ -44,7 +53,7 @@ const storePost = async () => {
     >
         <div class="w-full">
             <div class="text-center">
-                <h1 class="text-3xl font-semibold text-gray-900">Sign in</h1>
+                <h1 class="text-3xl font-semibold text-gray-900">Sign up</h1>
                 <p class="mt-2 text-gray-500">
                     Sign in below to access your account
                 </p>

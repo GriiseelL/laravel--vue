@@ -4,6 +4,7 @@ import Regis from "./pages/regis.vue";
 import Login from "./pages/login.vue";
 import Dashboard from "./pages/dashboard.vue";
 import Notfound from "./pages/notfound.vue";
+import Otp from "./pages/otp.vue";
 
 const isAuthenticated = () => {
     return localStorage.getItem("token") !== null;
@@ -32,6 +33,11 @@ const routes = [
         path: "/:pathMatch(.*)*",
         name: "NotFound",
         component: Notfound,
+    },
+    {
+        path: "/otp",
+        name: "otp",
+        component: Otp,
     },
 ];
 

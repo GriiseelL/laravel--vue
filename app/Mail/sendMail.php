@@ -12,14 +12,14 @@ use Illuminate\Queue\SerializesModels;
 class sendMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $data;
+    public $otp;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($data)
+    public function __construct($otp)
     {
-        $this->data = $data;
+        $this->otp = $otp;
     }
 
 
@@ -27,7 +27,7 @@ class sendMail extends Mailable
     {
         return $this->subject('Testing Kirim Email')
             ->view('sendemail')
-            ->with($this->data);
+            ->with($this->otp);
             ;
     }
 
@@ -37,7 +37,7 @@ class sendMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Send Mail',
+            subject: 'Verifikasi OTP',
         );
     }
 

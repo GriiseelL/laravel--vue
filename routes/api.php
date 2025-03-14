@@ -1,8 +1,9 @@
 <?php
 
+// use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\OtpController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+// use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Mail\sendMail;
 
@@ -13,8 +14,10 @@ Route::post('/login', App\Http\Controllers\Api\LoginController::class)->name('lo
 
 Route::post('/logout', App\Http\Controllers\Api\LogoutController::class)->name('logout');
 
-Route::get('/send-email', [OtpController::class, 'sendOtp'])->name('otp');
-    // $data = [
+// Route::post('/verify-otp', [OtpController::class, 'verifyOtp'])->name('otp');
+Route::post('/verify-otp', [OtpController::class, 'verifyOtp']);
+
+// $data = [
     //     'name' => 'Syahrizal As',
     //     'body' => 'Testing Kirim Email di Santri Koding'
     // ];
