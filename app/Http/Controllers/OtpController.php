@@ -36,12 +36,13 @@ class OtpController extends Controller
         }
 
         if (now()->greaterThan($user->otp_expires_at)) {
-            return response()->json(['error' => 'OTP expired'], 422);
+            return response()->json(['error' => 'OTP expired'], 401);
         }
 
         // Reset OTP setelah berhasil diverifikasi
         $user->otp = null;
         $user->otp_expires_at = null;
+        $user->email_verified_at = now();
         $user->save();
 
         return response()->json(['message' => 'OTP verified successfully']);

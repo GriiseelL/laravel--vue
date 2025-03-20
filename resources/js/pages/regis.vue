@@ -55,7 +55,7 @@ const storePost = async () => {
             <div class="text-center">
                 <h1 class="text-3xl font-semibold text-gray-900">Sign up</h1>
                 <p class="mt-2 text-gray-500">
-                    Sign in below to access your account
+                    Sign up to have an account
                 </p>
             </div>
             <div class="mt-5">
@@ -114,12 +114,12 @@ const storePost = async () => {
                             type="submit"
                             class="w-full rounded-md bg-black px-3 py-4 text-white focus:bg-gray-600 focus:outline-none"
                         >
-                            Sign in
+                            Sign up
                         </button>
                     </div>
                     <p class="text-center text-sm text-gray-500">
-                        Don&#x27;t have an account yet?
-                        <router-link to="/login">Sign up</router-link>
+                        have an account yet?
+                        <router-link to="/loginotp">Sign in</router-link>
                     </p>
                 </form>
             </div>

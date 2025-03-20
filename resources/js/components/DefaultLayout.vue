@@ -78,7 +78,7 @@ const logout = async () => {
 
     // Tetap hapus token & redirect ke halaman login
     localStorage.removeItem("token");
-    router.push("/login");
+    router.push("/loginotp");
 
     //   loading.value = false;
 };

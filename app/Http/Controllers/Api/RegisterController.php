@@ -22,11 +22,6 @@ class RegisterController extends Controller
             'password' => 'required|min:8'
         ]);
 
-        //if validation fails
-        // if ($validator->fails()) {
-        //     return response()->json($validator->errors(), 422);
-        // }
-
         //create user
         $otp = rand(10000, 99999);
 
@@ -40,7 +35,7 @@ class RegisterController extends Controller
 
         Mail::to($request->email)->send(new sendMail($otp));
 
-        //return response JSON user is created
+    
         if ($user) {
             return response()->json([
                 'message' => 'OTP sent successfully',
@@ -49,7 +44,6 @@ class RegisterController extends Controller
             ], 201);
         }
 
-        //return JSON process insert failed 
         return response()->json([
             'success' => false,
         ], 409);

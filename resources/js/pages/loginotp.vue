@@ -1,56 +1,43 @@
 <script setup>
 import { ref } from "vue";
-import GuestLayout from "../components/GuestLayout.vue";
-import axiosClient from "../axios";
+import axiosClient from "../axios"; // Pastikan import axios benar
 import router from "../router";
 
-const data = ref({
-    name: "",
-    email: "",
-    password: "",
-});
+const email = ref("");
+// const name = ref("");
+const otp = ref("");
+const message = ref("");
+const error = ref("");
+const isSent = ref(false);
 
-const errors = ref({});
+const sendOtp = async () => {
+    console.log("Tombol diklik, proses kirim OTP...");
 
-const loading = ref(false);
-// const email = localStorage.getItem("email");
+    message.value = "berhasil";
+    error.value = "";
 
-const login = async () => {
-    errors.value = {}; // Reset error
-    loading.value = true;
-
-    //  if (!email) {
-    //     alert("Email tidak terdaftar.");
-    //     router.push({ path: "/" });
-    //     return;
-    // }
+    if (!email.value) {
+        error.value = "Email tidak boleh kosong";
+        return;
+    }
 
     try {
-        const response = await axiosClient.post("/login", {
+        console.log("Mengirim email:", email.value);
+        const response = await axiosClient.post("/send-otp", {
             email: email.value,
-            password: password.value,
         });
-
-        // Simpan token ke localStorage
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("name", response.data.user.name);
-
-        localStorage.getItem("email", response.data.email);
-        if (!email) {
-            alert("Email tidak terdafaftar.");
-            router.push({ path: "/" });
-            return;
-        }
-
-        // Redirect ke dashboard
-        router.push({ path: "/dashboard" });
-    } catch (error) {
-        if (error.response) {
-            if (error.response.status === 401) {
-                errors.value.general = "Email atau password salah";
-                alert(errors.value.general);
-            } else if (error.response.status === 403) {
-                errors.value = "Email belum terverifikasi";
+        // message.value = response.data.message;
+        console.log("Berhasil:", response.data);
+        isSent.value = true;
+    } catch (err) {
+        if (err.response) {
+            if (err.response.status === 404) {
+                alert("email tidak terdaftar");
+            }
+            // error.value = err.response.data.message || "Terjadi kesalahan";
+            else if (err.response.status === 403) {
+                console.log("Masuk ke blok 403: Email belum terverifikasi");
+                error.value = "Email belum terverifikasi";
 
                 // Tampilkan konfirmasi
                 if (
@@ -69,20 +56,38 @@ const login = async () => {
                             alert("Gagal mengirim OTP. Silakan coba lagi.");
                         });
                 }
-            } else {
-                errors.value.general = "Terjadi kesalahan. Coba lagi.";
-                alert(errors.value.general);
             }
         } else {
-            errors.value.general = "Tidak dapat menghubungi server.";
-            alert(errors.value.general);
+            error.value = "Tidak bisa terhubung ke server";
         }
-    } finally {
-        loading.value = false; // Matikan loading
+    }
+};
+
+const verifyOtp = async () => {
+    if (!otp.value) {
+        error.value = "OTP tidak boleh kosong";
+        return;
+    }
+    try {
+        const response = await axiosClient.post("/verif-login", {
+            otp: otp.value,
+            email: email.value,
+        });
+        if (response.status === 200) {
+            localStorage.setItem("name", response.data.user.name);
+            localStorage.setItem("token", response.data.token);
+            router.push({ path: "/dashboard" });
+        }
+        message.value = response.data.message;
+        error.value = "";
+    } catch (err) {
+        error.value =
+            err.response?.data?.message ||
+            "Terjadi kesalahan saat verifikasi OTP";
+            alert("Invalid kode")
     }
 };
 </script>
-
 <template>
     <div
         class="relative mx-auto w-full max-w-md bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl sm:px-10"
@@ -96,12 +101,13 @@ const login = async () => {
                 </p>
             </div>
             <div class="mt-5">
-                <form @submit.prevent="login">
+                <form @submit.prevent="sendOtp">
                     <div class="relative mt-6">
                         <input
                             type="email"
                             name="email"
                             id="email"
+                            v-model="email"
                             placeholder="Email Address"
                             class="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none"
                             autocomplete="NA"
@@ -112,18 +118,30 @@ const login = async () => {
                             >Email Address</label
                         >
                     </div>
+                    <div class="my-6">
+                        <button
+                            v-if="!isSent"
+                            type="submit"
+                            class="w-full rounded-md bg-black px-3 py-4 text-white focus:bg-gray-600 focus:outline-none"
+                        >
+                            Send Otp
+                        </button>
+                    </div>
+                </form>
+                <form @submit.prevent="verifyOtp">
                     <div class="relative mt-6">
                         <input
-                            type="password"
+                            type="text"
                             name="password"
                             id="password"
-                            placeholder="Password"
+                            v-model="otp"
+                            placeholder="OTP"
                             class="peer peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none"
                         />
                         <label
                             for="password"
                             class="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800"
-                            >Password</label
+                            >OTP</label
                         >
                     </div>
                     <div class="my-6">
@@ -135,8 +153,12 @@ const login = async () => {
                         </button>
                     </div>
                     <p class="text-center text-sm text-gray-500">
-                        sign in with otp?
-                        <router-link to="/loginotp">here</router-link>
+                        dont have account?
+                        <router-link to="/">Sign up</router-link>
+                    </p>
+                    <p class="text-center text-sm text-gray-500">
+                        sign in with password?
+                        <router-link to="/login">here</router-link>
                     </p>
                 </form>
             </div>

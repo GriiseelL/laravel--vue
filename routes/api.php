@@ -1,7 +1,10 @@
 <?php
 
 // use App\Http\Controllers\Api\RegisterController;
+
+use App\Http\Controllers\LoginOtpController;
 use App\Http\Controllers\OtpController;
+use App\Http\Controllers\ResendotpController;
 use Illuminate\Http\Request;
 // use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +19,11 @@ Route::post('/logout', App\Http\Controllers\Api\LogoutController::class)->name('
 
 // Route::post('/verify-otp', [OtpController::class, 'verifyOtp'])->name('otp');
 Route::post('/verify-otp', [OtpController::class, 'verifyOtp']);
+Route::post('/resend-otp', [ResendotpController::class,'resend']);
+
+Route::post('/send-otp', [LoginOtpController::class, 'sendOtp']);
+
+Route::post('/verif-login', [LoginOtpController::class, 'Otplogin']);
 
 // $data = [
     //     'name' => 'Syahrizal As',

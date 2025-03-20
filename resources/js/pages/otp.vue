@@ -11,7 +11,7 @@ const email = localStorage.getItem("email");
 const verifyOtp = async () => {
     if (!email) {
         alert("Email tidak ditemukan. Silakan registrasi ulang.");
-        router.push({ path: "/register" });
+        router.push({ path: "/" });
         return;
     }
 
@@ -30,7 +30,7 @@ const verifyOtp = async () => {
             localStorage.removeItem("email");
 
             // Redirect ke halaman login
-            router.push({ path: "/login" });
+            router.push({ path: "/loginotp" });
         }
     } catch (error) {
         console.log(error.response?.data);
@@ -58,14 +58,14 @@ const verifyOtp = async () => {
                     Verifikasi OTP
                 </h1>
                 <p class="mt-2 text-gray-500">
-                    Sign up below to access your account
+                   Verif your account
                 </p>
             </div>
             <div class="mt-5">
                 <form @submit.prevent="verifyOtp">
                     <div class="relative mt-6">
                         <input
-                            type="password"
+                            type="text"
                             name="password"
                             v-model="otp"
                             id="password"
